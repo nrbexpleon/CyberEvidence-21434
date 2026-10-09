@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {calculateRisk,evaluateProject,validateProject,validateScenario} from '../src/methodology.mjs';
+test('risk matrix is explainable',()=>{assert.deepEqual(calculateRisk({impact:'severe',feasibility:'high'}),{score:16,rating:'CRITICAL'});assert.equal(calculateRisk({impact:'moderate',feasibility:'low'}).rating,'MEDIUM')});
+test('project validation requires item definition',()=>assert.equal(validateProject({}).length,4));
+test('scenario validation detects missing data',()=>assert.ok(validateScenario({}).length>=7));
+test('empty project identifies evidence gaps',()=>{const a=evaluateProject({assets:[],scenarios:[],goals:[],evidence:[],reviews:[]});assert.equal(a.status,'GAPS_IDENTIFIED');assert.ok(a.findings.length>=2)});
+test('complete trace is ready for review',()=>{const p={assets:['firmware'],scenarios:[{id:'s1',risk:{rating:'HIGH'},treatment:'REDUCE'}],goals:[{id:'g1',scenarioIds:['s1']}],evidence:[{id:'e1',goalIds:['g1'],validUntil:'2099-01-01'}],reviews:[]};const a=evaluateProject(p,new Date('2026-01-01'));assert.equal(a.status,'READY_FOR_REVIEW');assert.equal(a.metrics.evidenceCoverage,100)});
+test('expired evidence is flagged',()=>{const p={assets:['x'],scenarios:[{id:'s',risk:{rating:'LOW'},treatment:'ACCEPT'}],goals:[{id:'g',scenarioIds:['s']}],evidence:[{goalIds:['g'],validUntil:'2025-01-01'}],reviews:[]};assert.equal(evaluateProject(p,new Date('2026-01-01')).metrics.expiredEvidence,1)});
