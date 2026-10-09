@@ -1,0 +1,8 @@
+{
+  "name": "Central Vehicle Gateway 2027",
+  "item": "Gateway software, update client, diagnostics, and in-vehicle network interfaces",
+  "boundary": "Includes gateway firmware, external diagnostics, Ethernet/CAN communication, update verification, and credential storage. Excludes backend campaign orchestration.",
+  "owner": "Cybersecurity Manager",
+  "lifecycle": "Development",
+  "assets": ["Firmware integrity", "Diagnostic authorization", "Vehicle network availability", "Update credentials"]
+}
